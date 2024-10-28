@@ -1,0 +1,18 @@
+Para conectar base de datos con la app con una BD de una sola Tabla
+
+1) Se crea el model con la clase Employment con los datos a llamar encapsulados
+2) Crea el helper con las funciones asincronas
+2.1) Recupera la instancia de base de datos
+2.2) Inicializa la base de datos comprobando si el fichero de base de datos existe en el directorio de documentos de la aplicación.
+/// directorio de documentos de la aplicación. 
+  Importante: Llamado de la base de datos
+2.3) Recupera una lista de empleados de la base de datos.
+
+Flujo BD: base model, helper llama a model, list llama a helper y a model
+
+
+Para conectar la BD de las Biblia con varias tablas
+
+1) Crear el model
+2) Cargar la base de datos SQLite3 y llamar la sentencia SQLite3
+3) Mostrar datos en pantalla
