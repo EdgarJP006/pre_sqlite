@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pre_sqlite/views/parses_xml.dart';
-import 'package:pre_sqlite/helper/bible_db_helper.dart';
+import 'package:pre_sqlite/helper/db_queries.dart';
 import 'package:pre_sqlite/models/bible_model.dart';
 
 List<BibleChapter> chapter_verse_list = [];
@@ -14,7 +14,6 @@ class ChapterListPage extends StatefulWidget {
 class _ChapterListPageState extends State<ChapterListPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -33,17 +32,43 @@ class _ChapterListPageState extends State<ChapterListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(books.length > 0 ? books[0].longname : ''),
+        title: Text(books.isNotEmpty ? books[0].longname : ''),
       ),
       body: ListView.builder(
-        physics: ClampingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: chapter_verse_list == null ? 0 : chapter_verse_list.length,
+        padding: const EdgeInsets.all(10), // Espacio alrededor del ListView
+        itemCount: chapter_verse_list.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: RichText(
-              text: parseText(context,
-                  '${chapter_verse_list[index].verse} ${chapter_verse_list[index].text}'),
+          return Container(
+            margin: const EdgeInsets.only(
+                bottom: 0,
+                top: 0,
+                left: 5,
+                right: 8), // Espacio entre ListTiles
+            padding: const EdgeInsets.only(
+                bottom: 0,
+                top: 0,
+                left: 10,
+                right: 10), // Espaciado interno del ListTile
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.circular(8),
+            //   boxShadow: [
+            //     BoxShadow(
+            //       color: Colors.grey.shade300,
+            //       offset: Offset(0, 1),
+            //       blurRadius: 6,
+            //     ),
+            //   ],
+            // ),
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: RichText(
+                text: parseText(
+                  context,
+                  '${chapter_verse_list[index].verse} ${chapter_verse_list[index].text}',
+                ),
+                textAlign: TextAlign.justify, // Justificado
+              ),
             ),
           );
         },

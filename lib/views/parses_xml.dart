@@ -2,17 +2,27 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:xml/xml.dart' as xml;
 
+// Función para convertir número a representación alfabética
+String numberToAlphabetic(int number) {
+  number--; // Ajustar para indexación de 0
+  String result = '';
+  while (number >= 0) {
+    result = String.fromCharCode((number % 26) + 97) + result;
+    number = (number ~/ 26) - 1;
+  }
+  return result;
+}
+
+int globalReferenceIndex = 0; // Índice global para la referencia
+
 TextSpan parseText(BuildContext context, String text) {
-  // Lista para almacenar números de referencia extraídos en el orden en que aparecen
   List<String> referenceNumbers = [];
 
-  // Reemplaza las referencias con espacios vacíos y almacena los números en la lista
   final cleanedText = text.replaceAllMapped(RegExp(r'\[(\d+)†\]'), (match) {
-    referenceNumbers.add(match.group(1)!); // Conserva el número de referencia
-    return ''; // Reemplaza con vacío en el texto
+    referenceNumbers.add(match.group(1)!);
+    return '';
   });
 
-  // Parsear el texto limpio
   final document = xml.XmlDocument.parse('<root>$cleanedText</root>');
   List<TextSpan> spans =
       _parseNode(context, document.rootElement, referenceNumbers);
@@ -22,7 +32,6 @@ TextSpan parseText(BuildContext context, String text) {
 List<TextSpan> _parseNode(
     BuildContext context, xml.XmlNode node, List<String> referenceNumbers) {
   List<TextSpan> spans = [];
-  int referenceIndex = 0; // Índice para rastrear las referencias en orden
 
   node.children.forEach((child) {
     if (child is xml.XmlText) {
@@ -40,20 +49,22 @@ List<TextSpan> _parseNode(
           style = TextStyle(fontWeight: FontWeight.bold);
           break;
         case 'pb':
-          // Manejo opcional para salto de página
           break;
         case 'f':
-          // Asigna el siguiente número de referencia de la lista
-          final refText = referenceNumbers[referenceIndex];
-          referenceIndex++; // Avanza al siguiente número para la próxima referencia
+          final refText = numberToAlphabetic(
+              globalReferenceIndex + 1); // Convertir a alfabético
+          globalReferenceIndex++; // Incremento global
 
           spans.add(
             TextSpan(
-              text: refText + ' ', // Muestra el número de referencia
+              text: '$refText†',
               style: const TextStyle(
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                  fontStyle: FontStyle.italic),
+                color: Color.fromARGB(255, 148, 148, 148),
+                fontSize: 10, // Tamaño pequeño para simular superíndice
+                // decoration: TextDecoration.overline,
+                fontStyle: FontStyle.italic,
+                height: 0.8, // Ajusta la altura
+              ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   showDialog(
