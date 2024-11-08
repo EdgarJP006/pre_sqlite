@@ -1,17 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:pre_sqlite/views/chapter_verse_list.dart';
+// lib/main.dart
 
-void main() => runApp(new MyApp());
+import 'package:flutter/material.dart';
+import 'package:pre_sqlite/providers/chapter_viewmodel.dart';
+import 'package:pre_sqlite/views/chapter_list_page.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChapterViewModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'SQFLite DataBase Demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: new ChapterListPage(),
+    return MaterialApp(
+      home: ChapterListPage(),
     );
   }
 }

@@ -71,7 +71,7 @@ List<TextSpan> _parseNode(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("Referencia"),
+                        title: const Text("Referencia"),
                         content: Text("Número de referencia: $refText"),
                         actions: [
                           TextButton(
